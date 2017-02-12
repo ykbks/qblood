@@ -1,5 +1,9 @@
 @import "https://daneden.github.io/animate.css/animate.min.css";
 @import "template.css";
+.badge.badge-blood {
+  background: #f14444;
+  color: white;
+}
 #navbar .navbar-brand {
   font-weight: bold;
   background: #f14444;
@@ -35,4 +39,29 @@
 #sidebar .nav li.current > a,
 #sidebar .nav li:hover > a {
   color: #f14444;
+}
+#front-available-donors .front-available-donor-count {
+  text-align: center;
+}
+#front-available-donors .front-available-donor-count a {
+  display: block;
+  padding-top: 5px;
+  background: #f14444;
+  margin-bottom: 5px;
+  color: white;
+  font-size: 1.5em;
+  border: 1px solid #f14444;
+  border-radius: 20px 0px;
+}
+#front-available-donors .front-available-donor-count a .badge {
+  display: block;
+  margin-top: 5px;
+  color: #f14444;
+  background: white;
+  border-radius: 20px 0px;
+  font-size: 1.75em;
+}
+#front-available-donors .front-available-donor-count a:hover,
+#front-available-donors .front-available-donor-count a:focus {
+  text-decoration: none;
 }
