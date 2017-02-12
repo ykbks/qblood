@@ -1,3 +1,11 @@
+// components
+Vue.component('dashboard', require('./components/Dashboard.vue'));
+
+// routes
+const routes = [
+
+];
+// app
 var app = new Vue({
   el : '#app',
   data : {
