@@ -9,13 +9,31 @@
 // #navbar
 #navbar{
   .navbar-brand{
-    color: @blood;
+    font-weight: bold;
+    background: @blood;
+    color: white;
   }
   a{
+    -webkit-transition: all .25s ease-in-out;
+    -o-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out;
+    .badge{
+      background: @blood;
+      color: white;
+      -webkit-transition: all .25s ease-in-out;
+      -o-transition: all .25s ease-in-out;
+      transition: all .25s ease-in-out;
+    }
     &:focus,
     &:hover{
-      color: @blood;
+      background-color: @blood;
+      color: white;
+      .badge{
+        background: white;
+        color: @blood;
+      }
     }
+
   }
 }
 
@@ -24,9 +42,12 @@
   .nav{
     li{
       a{
-
+        -webkit-transition: all .25s ease-in-out;
+        -o-transition: all .25s ease-in-out;
+        transition: all .25s ease-in-out;
       }
-      &.current{
+      &.current,
+      &:hover{
         & > a {
           color: @blood;
         }

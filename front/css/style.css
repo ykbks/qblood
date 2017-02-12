@@ -1,12 +1,38 @@
 @import "https://daneden.github.io/animate.css/animate.min.css";
 @import "template.css";
 #navbar .navbar-brand {
-  color: #f14444;
+  font-weight: bold;
+  background: #f14444;
+  color: white;
+}
+#navbar a {
+  -webkit-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+#navbar a .badge {
+  background: #f14444;
+  color: white;
+  -webkit-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 #navbar a:focus,
 #navbar a:hover {
+  background-color: #f14444;
+  color: white;
+}
+#navbar a:focus .badge,
+#navbar a:hover .badge {
+  background: white;
   color: #f14444;
 }
-#sidebar .nav li.current > a {
+#sidebar .nav li a {
+  -webkit-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+#sidebar .nav li.current > a,
+#sidebar .nav li:hover > a {
   color: #f14444;
 }
