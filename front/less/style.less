@@ -1,0 +1,36 @@
+// imports
+@import "https://daneden.github.io/animate.css/animate.min.css";
+@import "template.css";
+// vars
+@blood: #f14444;
+
+// common
+
+// #navbar
+#navbar{
+  .navbar-brand{
+    color: @blood;
+  }
+  a{
+    &:focus,
+    &:hover{
+      color: @blood;
+    }
+  }
+}
+
+// sidebar
+#sidebar{
+  .nav{
+    li{
+      a{
+
+      }
+      &.current{
+        & > a {
+          color: @blood;
+        }
+      }
+    }
+  }
+}

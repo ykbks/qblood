@@ -1,0 +1,12 @@
+@import "https://daneden.github.io/animate.css/animate.min.css";
+@import "template.css";
+#navbar .navbar-brand {
+  color: #f14444;
+}
+#navbar a:focus,
+#navbar a:hover {
+  color: #f14444;
+}
+#sidebar .nav li.current > a {
+  color: #f14444;
+}
