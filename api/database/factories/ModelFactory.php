@@ -22,6 +22,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Area::class, function(Faker\Generator $faker){
+	return [
+		'name' => $faker->city,
+		'parent' => $faker->boolean ? $faker->numberBetween(1,20) : null
+	];
+});
+
 $factory->define(App\Donor::class, function(Faker\Generator $faker){
 	$reg_no = $faker->numberBetween(1,28);
 	$gender = $faker->randomElement(['male','female']);
@@ -70,6 +78,8 @@ $factory->define(App\Donor::class, function(Faker\Generator $faker){
 		'unavailable_till' => !$available ? $faker->dateTimeBetween('+2 days' , '+2 years') : null,
 		'ref_name' => $faker->name,
 		'ref_phone' => $faker->boolean ? '0' . $faker->numberBetween(1111111111,1999999999) : null,
-		'blood_group' => $faker->randomElement(['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-'])
+		'blood_group' => $faker->randomElement(['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-']),
+		'area_id' => $faker->numberBetween(1,20),
+		'address' => $faker->address
 	];
 });

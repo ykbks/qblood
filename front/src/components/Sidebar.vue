@@ -23,7 +23,7 @@ export default {
                  <!-- Sub menu -->
                  <ul>
                     <li><router-link :to="{name :'donors.add'}"><i class="fa fa-plus"></i> Add</router-link></li>
-                    <li><a href="#"><i class="fa fa-list-alt"></i> List</a></li>
+                    <li><router-link :to="{name: 'donors.list'}"><i class="fa fa-list-alt"></i> List</router-link></li>
                     <li><a href="#"><i class="fa fa-copy"></i> Reports</a></li>
                 </ul>
             </li>

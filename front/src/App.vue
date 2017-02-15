@@ -7,10 +7,6 @@ export default {
   components: {
     Navbar,
     Sidebar
-  },
-  data: function () {
-    return {
-    }
   }
 }
 
