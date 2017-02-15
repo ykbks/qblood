@@ -17,14 +17,15 @@ export default {
 
       <form class="form-horizontal" action="">
 
-        <label for="" class="control-label col-sm-2">Donor's Name</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control">
+        <div class="form-group">
+          <label for="" class="control-label col-sm-2">Donor's Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control">
+          </div>
         </div>
 
       </form>
 
-      <div class="clearfix"></div>
     </div>
 
   </div>
