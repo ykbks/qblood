@@ -31,8 +31,6 @@ class CreateDonorsTable extends Migration
             $table->boolean('can_donate')->default(1);
             $table->boolean('available')->default(1);
             $table->date('unavailable_till')->nullable();
-            $table->string('ref_name')->nullable();
-            $table->string('ref_phone')->nullable();
             $table->integer('area_id')->nullable();
             $table->string('address',500)->nullable();
             $table->string('added_by')->nullable();

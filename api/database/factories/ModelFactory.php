@@ -76,8 +76,6 @@ $factory->define(App\Donor::class, function(Faker\Generator $faker){
 		'can_donate' => $faker->boolean,
 		'available' => $available,
 		'unavailable_till' => !$available ? $faker->dateTimeBetween('+2 days' , '+2 years') : null,
-		'ref_name' => $faker->name,
-		'ref_phone' => $faker->boolean ? '0' . $faker->numberBetween(1111111111,1999999999) : null,
 		'blood_group' => $faker->randomElement(['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-']),
 		'area_id' => $faker->numberBetween(1,20),
 		'address' => $faker->address

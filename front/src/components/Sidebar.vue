@@ -15,6 +15,7 @@ export default {
         <ul class="nav">
             <!-- Main menu -->
             <li class=""><router-link :to="{name :'dashboard'}" exact><i class="glyphicon glyphicon-home"></i> Dashboard</router-link></li>
+            <li class=""><router-link :to="{name :'dashboard'}" exact><i class="fa fa-check"></i> Available</router-link></li>
             <li class="submenu">
                  <a href="#">
                     <i class="fa fa-heartbeat"></i> Donors
