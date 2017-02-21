@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>qbloodsyl</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="//code.jquery.com/jquery.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+
+        $(".submenu > a").click(function(e) {
+          e.preventDefault();
+          var $li = $(this).parent("li");
+          var $ul = $(this).next("ul");
+
+          if($li.hasClass("open")) {
+            $ul.slideUp(350);
+            $li.removeClass("open");
+          } else {
+            $(".nav > li > ul").slideUp(350);
+            $(".nav > li").removeClass("open");
+            $ul.slideDown(350);
+            $li.addClass("open");
+          }
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
