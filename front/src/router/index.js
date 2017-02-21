@@ -5,6 +5,7 @@ import Dashboard from 'components/Dashboard'
 import Activities from 'components/Activities'
 import AddDonor from 'components/AddDonor'
 import DonorList from 'components/DonorList'
+import Available from 'components/Available'
 // components end
 
 Vue.use(Router)
@@ -31,6 +32,11 @@ export default new Router({
       path: '/donors/list',
       name: 'donors.list',
       component: DonorList
+    },
+    {
+      path: '/donors/available',
+      name: 'donors.available',
+      component: Available
     }
   ]
 })

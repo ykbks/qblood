@@ -7,6 +7,11 @@ export default {
   components: {
     Navbar,
     Sidebar
+  },
+  data () {
+    return {
+      bloodGroups: ['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-']
+    }
   }
 }
 
@@ -14,7 +19,7 @@ export default {
 
 <template>
   <div id="app">
-    <navbar></navbar>
+    <navbar :groups="bloodGroups"></navbar>
     <div class="page-content">
       <div class="row">
         <sidebar></sidebar>

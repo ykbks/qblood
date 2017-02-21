@@ -9,15 +9,15 @@ export default {
   data () {
     return {
       apiUrl: 'http://localhost:8000/api/1/',
-      showFilter: true,
+      showFilter: false,
       working: false,
       bloodGroups: ['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-'],
       regTypes: ['QA', 'QG', 'QPM'],
       religions: ['Islam', 'Hindu', 'Buddhist', 'Christian'],
       batches: [],
       donors: [],
-      currentPage: null,
-      totalPages: null,
+      currentPage: 1,
+      totalPages: 1,
       totalDonors: null,
       areas: [],
       listOptions: {
@@ -35,13 +35,7 @@ export default {
     }
   },
   created () {
-    this.$http.get(this.apiUrl + 'donors')
-        .then(response => {
-          this.donors = response.body.data
-          this.currentPage = response.body.current_page
-          this.totalPages = response.body.last_page
-          this.totalDonors = response.body.total
-        })
+    this.filterList()
 
     this.$http.get(this.apiUrl + 'areas')
         .then(response => {
@@ -53,14 +47,19 @@ export default {
           this.batches = response.body
         })
   },
+  watch: {
+    currentPage: function () {
+      this.filterList()
+    }
+  },
   methods: {
     toggleFilter () {
       this.showFilter = !this.showFilter
     },
-    filterList () {
+    filterList (firstpage) {
       this.working = true
 
-      var terms = {}
+      let terms = {}
 
       terms.canDonate = this.listOptions.canDonate
       terms.available = this.listOptions.available
@@ -91,6 +90,11 @@ export default {
       if (this.listOptions.religions.length > 0) {
         terms.religions = this.listOptions.religions
       }
+      if (firstpage) {
+        terms.page = 1
+      } else {
+        terms.page = (this.currentPage != null) ? this.currentPage : 1
+      }
 
       this.$http.get(this.apiUrl + 'donors', {params: terms}).then(response => {
         // success
@@ -103,6 +107,34 @@ export default {
       })
 
       this.working = false
+    },
+    clearInputs () {
+      this.listOptions = {
+        groups: [],
+        areas: [],
+        canDonate: null,
+        regTypes: [],
+        batches: [],
+        religions: [],
+        available: null,
+        term: '',
+        orderBy: '',
+        order: ''
+      }
+    },
+    resetPage () {
+      this.clearInputs()
+      this.filterList()
+    },
+    prevPage () {
+      if (this.currentPage !== 1) {
+        this.currentPage--
+      }
+    },
+    nextPage () {
+      if (this.currentPage !== this.totalPages) {
+        this.currentPage++
+      }
     }
   }
 }
@@ -228,8 +260,8 @@ export default {
             <div class="col-sm-12">
               <div class="form-group">
                 <br>
-                <button v-bind:disabled="working" v-on:click="filterList()" class="btn btn-primary"><i class="fa fa-check"></i> Apply</button>
-                <button xv-on:click="filterList()" class="btn btn-link"><i class="fa fa-eraser"></i> Clear</button>
+                <button v-bind:disabled="working" v-on:click="filterList(true)" class="btn btn-primary"><i class="fa fa-check"></i> Apply</button>
+                <button v-on:click="resetPage()" class="btn btn-link"><i class="fa fa-eraser"></i> Clear</button>
                 <br>
                 <p v-if="working"><i class="fa fa-spin fa-spinner"></i> working</p>
               </div>
@@ -243,7 +275,10 @@ export default {
       <table class="table table-bordered table-hover table-striped">
         <thead>
           <tr>
-            <th class="text-center" colspan="7">entries found: <span class="label label-primary">{{ totalDonors }}</span></th>
+            <th class="text-center" colspan="7">
+                <p v-if="!working">entries found: {{ totalDonors }}. Showing page {{ currentPage }}/{{ totalPages }}</p>
+                <p v-if="working"><i class="fa fa-spin fa-spinner"></i> loading list...</p>
+            </th>
           </tr>
           <tr>
             <th>Sl.</th>
@@ -298,7 +333,16 @@ export default {
         </tfoot>
       </table>
 
-      <pre>{{ donors }}</pre>
+      <ul class="pager">
+        <li><button v-on:click="prevPage()" class="btn btn-default" :disabled="currentPage === 1 || working"><i class="fa fa-arrow-left"></i> Previous</button></li>
+        <li>
+          <select v-model="currentPage" class="" style="padding: 8px 10px; border-radius: 0px;" :disabled="working">
+            <option v-for="n in totalPages" :value="n">{{ n }}</option>
+          </select>
+        </li>
+        <li><button v-on:click="nextPage()" class="btn btn-default" :disabled="currentPage == totalPages || working">Next <i class="fa fa-arrow-right"></i></button></li>
+      </ul>
+      <p class="text-center" v-if="working"><i class="fa fa-spin fa-spinner"></i> working...</p>
 
     </div>
 
