@@ -1,9 +1,10 @@
 <script>
 export default {
   name: 'dashboard',
+  props: ['availableCount'],
   data () {
     return {
-      bloodGroups: ['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-'],
+      apiUrl: 'http://localhost:8000/api/1/',
       birthdayCount: 20,
       birthdays: [
         {id: 2, name: 'Donor 1', phone_primary: 64651324, phone_secondary: [123231, 1233211], phone_request: 884533},
@@ -50,8 +51,8 @@ export default {
           </div>
           <div class="panel-body">
             <div class="row">
-              <div v-for="(group, index) in bloodGroups" class="col-xs-6 front-available-donor-count">
-                <a href="#">{{ group }} <span class="badge">{{ (index * 5) + 1 }}</span></a>
+              <div v-for="item in availableCount" class="col-xs-6 front-available-donor-count">
+                <router-link :to=" { name: 'donors.availableByGroup', params: {group: item.group} } ">{{ item.group }} <span class="badge">{{ item.count }}</span></router-link>
               </div>
             </div>
           </div>

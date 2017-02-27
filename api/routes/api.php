@@ -5,8 +5,11 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => '1'], function() {
     
 	Route::resource('donors', 'DonorController');
-	Route::get('getRegBatches','DonorController@getRegBatches');
 	Route::resource('areas', 'AreaController');
+
+	Route::get('getRegBatches','DonorController@getRegBatches');
+	Route::get('getDonorCount','DonorController@getDonorCount');
+	
 
 });
 

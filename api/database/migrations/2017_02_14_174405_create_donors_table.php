@@ -17,10 +17,10 @@ class CreateDonorsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->enum('gender',['male','female']);
-            $table->enum('religion', ['islam','hindu','buddhist','christian']);
+            $table->enum('religion', ['islam','hindu','buddhist','christian','others']);
             $table->date('dob')->nullable();
             $table->enum('reg_type',['qa','qg','qpm']);
-            $table->enum('blood_group',['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-']);
+            $table->enum('blood_group',['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']);
             $table->integer('reg_no')->nullable();
             $table->integer('reg_batch')->nullable();
             $table->string('reg_batch_suffix')->nullable();
@@ -33,6 +33,7 @@ class CreateDonorsTable extends Migration
             $table->date('unavailable_till')->nullable();
             $table->integer('area_id')->nullable();
             $table->string('address',500)->nullable();
+            $table->datetime('last_contacted_at')->nullable();
             $table->string('added_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

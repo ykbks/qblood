@@ -1,19 +1,19 @@
 <script>
 import vSelect from 'vue-select'
+import moment from 'moment'
 
 export default {
   name: 'donorlist',
   components: {
     vSelect
   },
+  props: ['groups', 'religions'],
   data () {
     return {
+      working: true,
       apiUrl: 'http://localhost:8000/api/1/',
       showFilter: false,
-      working: false,
-      bloodGroups: ['A+', 'A-', 'AB+', 'AB-', 'O+', 'O-'],
       regTypes: ['QA', 'QG', 'QPM'],
-      religions: ['Islam', 'Hindu', 'Buddhist', 'Christian'],
       batches: [],
       donors: [],
       currentPage: 1,
@@ -99,14 +99,13 @@ export default {
       this.$http.get(this.apiUrl + 'donors', {params: terms}).then(response => {
         // success
         this.donors = response.body.data
-        this.currentPage = response.body.current_page
         this.totalPages = response.body.last_page
         this.totalDonors = response.body.total
       }, response => {
         // error
+        console.error(response)
       })
-
-      this.working = false
+      setTimeout(function () { this.working = false }.bind(this), 500)
     },
     clearInputs () {
       this.listOptions = {
@@ -126,15 +125,14 @@ export default {
       this.clearInputs()
       this.filterList()
     },
-    prevPage () {
-      if (this.currentPage !== 1) {
-        this.currentPage--
-      }
+    handlePageChange (val) {
+      this.currentPage = val
     },
-    nextPage () {
-      if (this.currentPage !== this.totalPages) {
-        this.currentPage++
-      }
+    dateDiff (date) {
+      return moment().diff(moment(date), 'months')
+    },
+    formatDate (date) {
+      return moment(date).format('DD MMM, YYYY')
     }
   }
 }
@@ -143,8 +141,8 @@ export default {
 <template>
 
   <div id="donorlist">
-
     <div class="content-box-large">
+
       <h3 class="page-header clearfix">
         <span class="pull-left">Donors</span>
         <span class="pull-right">
@@ -158,7 +156,7 @@ export default {
             <div class="col-sm-2">
               <div class="form-group">
                 <label for="blood_group">Blood Group(s)</label>
-                <v-select v-model="listOptions.groups" :options="bloodGroups" multiple></v-select>
+                <v-select v-model="listOptions.groups" :options="groups" multiple></v-select>
               </div>
             </div>
             
@@ -217,13 +215,21 @@ export default {
             <div class="col-sm-2">
               <div class="form-group">
                 <label>Sort By</label>
-                <v-select v-model="listOptions.orderBy" :options="['Name']" ></v-select>
+                <v-select 
+                  v-model="listOptions.orderBy" 
+                  :options="[
+                    {label: 'Name', value: 'name'}, 
+                    {label: 'Date Added', value: 'created_at'},
+                    {label: 'Blood Group', value: 'blood_group'},
+                    {label: 'Availability', value: 'available'},
+                    {label: 'Can Donate', value: 'can_donate'}
+                  ]"></v-select>
               </div>
             </div>
 
             <div class="col-sm-2">
               <div class="form-group">
-                <label>Sort By</label>
+                <label>Order</label>
                 <v-select v-model="listOptions.order" :options="['Asc','Desc']" ></v-select>
               </div>
             </div>
@@ -272,77 +278,88 @@ export default {
         </div>
       </div>
 
-      <table class="table table-bordered table-hover table-striped">
-        <thead>
-          <tr>
-            <th class="text-center" colspan="7">
-                <p v-if="!working">entries found: {{ totalDonors }}. Showing page {{ currentPage }}/{{ totalPages }}</p>
-                <p v-if="working"><i class="fa fa-spin fa-spinner"></i> loading list...</p>
-            </th>
-          </tr>
-          <tr>
-            <th>Sl.</th>
-            <th>Donor</th>
-            <th>Blood Group</th>
-            <th>Available</th>
-            <th>Last Donation</th>
-            <th>Contact</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
+      <div>
+        
+        <el-table
+          v-loading.body="working"
+          :data="donors"
+          border
+          style="width: 100%">
 
-        <tbody>
+          <el-table-column label="Sl." width="75">
+            <template scope="scope">
+              {{ scope.$index + 1 + (10 * (currentPage - 1))  }}
+            </template>
+          </el-table-column>
+          <el-table-column label="Donor">
+            <template scope="scope">
+              <router-link :to="{ name: 'donors.details', params: {id: scope.row.id} }"><strong>{{ scope.row.name }}</strong></router-link>
+              <br>
+              <small>{{ scope.row.reg_complete }}</small>
+            </template>
+          </el-table-column>
+          <el-table-column label="Blood Group">
+            <template scope="scope">
+              <strong>{{ scope.row.blood_group }}</strong>
+            </template>
+          </el-table-column>
+          <el-table-column label="Available">
+            <template scope="scope">
+              <strong class="text-info" v-if="scope.row.can_donate && scope.row.available">Yes</strong>
+              <strong class="text-danger" v-if="!scope.row.can_donate || !scope.row.available">No</strong>
+              <strong class="text-danger" v-if="!scope.row.available && scope.row.unavailable_till">(till {{ formatDate(scope.row.unavailable_till) }})</strong>
+            </template>
+          </el-table-column>
+          <el-table-column label="Last Donation">
+            <template scope="scope">
+              <span v-if="scope.row.last_donation === undefined || scope.row.last_donation == null">
+                  Never
+                </span>
+                <span v-else>
+                  
+                  <i class="fa fa-clock-o"></i> {{ dateDiff(scope.row.last_donation.date)  }} months ago
+                  <br>
+                  <i class="fa fa-calendar"></i> {{ formatDate(scope.row.last_donation.date) }}
+                  
+                </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="Address">
+            <template scope="scope">
+              <i class="fa fa-map-marker"></i> {{scope.row.area.name}} <el-tooltip content="List available donors only in this area" placement="right" effect="light"><el-button type="text" icon="search"></el-button></el-tooltip>
+                <br>
+                <i class="fa fa-envelope"></i> {{scope.row.address}}
+            </template>
+          </el-table-column>
+          <el-table-column label="Action">
+            <template scope="scope">
+            
+              <el-dropdown split-button type="primary">
+                <i class="fa fa-plus"></i> Add Donation
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item><i class="fa fa-info-circle"></i> Details</el-dropdown-item>
+                  <el-dropdown-item><i class="fa fa-pencil"></i> Edit</el-dropdown-item>
+                  <el-dropdown-item><i class="fa fa-times"></i> Delete</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
+            </template>
+          </el-table-column>
           
-          <tr v-if="donors.length < 1">
-            <td colspan="7">Sorry, nothing found</td>
-          </tr>
+        </el-table>
 
-          <tr v-for="(donor, index) in donors">
-            <td>{{ ( 10 * (currentPage - 1) ) + index + 1 }}</td>
-            <td>
-                <a href="">{{ donor.name }}</a>
-                <p>{{ donor.reg_complete }}</p>
-            </td>
-            <td>
-                {{ donor.blood_group }} 
-                <br> 
-                <span class="label label-danger" v-if="!donor.can_donate">Can't Donate</span>
-            </td>
-            <td>
-                <span class="text-success" v-if="donor.available">Yes</span>
-                <span class="text-danger" v-if="!donor.available">No</span>
-                <span class="text-danger" v-if="!donor.available && donor.can_donate != null">till {{donor.unavailable_till}}</span>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
+        <br>
 
-        </tbody>
-
-        <tfoot>
-          <tr>
-            <th>Sl.</th>
-            <th>Donor</th>
-            <th>Blood Group</th>
-            <th>Available</th>
-            <th>Last Donation</th>
-            <th>Contact</th>
-            <th>Actions</th>
-          </tr>
-        </tfoot>
-      </table>
-
-      <ul class="pager">
-        <li><button v-on:click="prevPage()" class="btn btn-default" :disabled="currentPage === 1 || working"><i class="fa fa-arrow-left"></i> Previous</button></li>
-        <li>
-          <select v-model="currentPage" class="" style="padding: 8px 10px; border-radius: 0px;" :disabled="working">
-            <option v-for="n in totalPages" :value="n">{{ n }}</option>
-          </select>
-        </li>
-        <li><button v-on:click="nextPage()" class="btn btn-default" :disabled="currentPage == totalPages || working">Next <i class="fa fa-arrow-right"></i></button></li>
-      </ul>
-      <p class="text-center" v-if="working"><i class="fa fa-spin fa-spinner"></i> working...</p>
+        <div class="text-center">
+          <el-pagination
+            layout="total, prev, pager, next, jumper"
+            @current-change="handlePageChange"
+            :page-count="totalPages"
+            :total="totalDonors">
+          </el-pagination>
+        </div>
+        
+      </div>
 
     </div>
 

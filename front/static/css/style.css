@@ -1,5 +1,6 @@
-@import "https://daneden.github.io/animate.css/animate.min.css";
-@import "template.css";
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css';
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
+@import 'https://daneden.github.io/animate.css/animate.min.css';
 .badge.badge-blood {
   background: #f14444;
   color: white;
@@ -66,3 +67,4 @@
 #front-available-donors .front-available-donor-count a:focus {
   text-decoration: none;
 }
+/*donor details*/

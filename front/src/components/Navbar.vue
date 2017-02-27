@@ -1,7 +1,7 @@
 <script>
 export default {
   name: 'navbar',
-  props: ['groups'],
+  props: ['groups', 'availableCount'],
   data () {
     return {
     }
@@ -30,8 +30,8 @@ export default {
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-clock-o"></i> Available <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li v-for="(group, index) in groups">
-                    <a href="#">{{ group }} <span class="badge pull-right">{{ (index * 5) + 1 }}</span></a>
+                  <li v-for="item in availableCount">
+                    <router-link :to="{ name: 'donors.availableByGroup', params: { group : item.group } }">{{ item.group }} <span class="badge pull-right">{{ item.count }}</span></router-link>
                   </li>
                 </ul>
               </li>

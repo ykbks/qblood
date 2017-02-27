@@ -6,6 +6,7 @@ import Activities from 'components/Activities'
 import AddDonor from 'components/AddDonor'
 import DonorList from 'components/DonorList'
 import Available from 'components/Available'
+import DonorDetails from 'components/DonorDetails'
 // components end
 
 Vue.use(Router)
@@ -34,8 +35,18 @@ export default new Router({
       component: DonorList
     },
     {
+      path: '/donors/:id/details',
+      name: 'donors.details',
+      component: DonorDetails
+    },
+    {
       path: '/donors/available',
       name: 'donors.available',
+      component: Available
+    },
+    {
+      path: '/donors/available/:group',
+      name: 'donors.availableByGroup',
       component: Available
     }
   ]
